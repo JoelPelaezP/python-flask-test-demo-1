@@ -5,3 +5,18 @@ services:
       - '5005:5000'
     volumes:
       - .:/app
+    depends_on:
+      - flask-test-db
+    env_file:
+      - ./.env
+  flask-test-db:
+    image: postgres:15
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_PASSWORD=Chr0me#1
+      - POSTGRES_DB=flask_test_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
