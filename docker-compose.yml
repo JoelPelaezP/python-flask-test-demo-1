@@ -2,7 +2,7 @@ services:
   flask-test-app:
     build: .
     ports:
-      - '5005:5000'
+      - '5005:80'
     volumes:
       - .:/app
     depends_on:

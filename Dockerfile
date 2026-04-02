@@ -13,6 +13,10 @@ COPY . .
 #CMD command to run app in PROD mode
 CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:create_app()"]
 
+# CMD command to run docker-entrypoint.sh
+# CMD ["/bin/bash", "docker-entrypoint.sh"]
+
+
 # docker command to run app
 # 1.1. build docker image
 # docker build -t <image-name> .
