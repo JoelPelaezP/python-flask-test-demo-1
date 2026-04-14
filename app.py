@@ -10,8 +10,13 @@ from resources.store import blp as StoreBlueprint
 from resources.user import blp as UserBlueprint
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
+import newrelic.agent
+
+CURRENT_ENV = os.getenv("ENVIRONMENT", "local")
+newrelic.agent.initialize('newrelic.ini', environment=CURRENT_ENV)
 
 def create_app(db_url=None):
+    print(f"Running in {CURRENT_ENV} MODE")
     app = Flask(__name__)
     load_dotenv()
     app.config["PROPAGATE_EXCEPTIONS"] = True

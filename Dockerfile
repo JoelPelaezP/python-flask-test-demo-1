@@ -1,17 +1,22 @@
 FROM python:3.10
 
 # Port is only to run development mode, but for PROD using Gunicorn we need to set port on CMD command
-# EXPOSE 5000
+EXPOSE 5000
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
+#RUN pip install --no-cache-dir newrelic
+#ENTRYPOINT ["newrelic-admin", "run-program"]
+
+
+
 COPY . .
 
 # CMD command to run app in development mode
-# CMD [ "flask", "run", "--host", "0.0.0.0" ]
+CMD [ "flask", "run", "--host", "0.0.0.0" ]
 
 #CMD command to run app in PROD mode
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:create_app()"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:create_app()"]
 
 # CMD command to run docker-entrypoint.sh
 # CMD ["/bin/bash", "docker-entrypoint.sh"]
