@@ -1,7 +1,11 @@
 # TO BE Implemented
 
 # Migrations
-1. 
+1. Run docker services
+`docker compose up --build --force-recreate --no-deps -d`
+
+2. Generate Migration Script (flask app needs to be running):
+`docker-compose exec <flask-app-service> flask db migrate -m "Initial migration"`
 
 
 # New Relic Integration

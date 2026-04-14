@@ -14,6 +14,7 @@ services:
     ports:
       - '5432:5432'
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=Chr0me#1
       - POSTGRES_DB=flask_test_dev
     volumes:
