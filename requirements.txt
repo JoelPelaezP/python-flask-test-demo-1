@@ -11,3 +11,5 @@ gunicorn
 psycopg2-binary
 newrelic
 requests
+uvicorn
+asgiref

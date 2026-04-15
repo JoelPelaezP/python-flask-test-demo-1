@@ -53,6 +53,7 @@ class Store(MethodView):
 class StoreList(MethodView):
     @blp.response(200, StoreSchema(many=True))
     def get(cls):
+        print("Getting all Store")
         return db_instance.session.query(StoreModel).all()
 
     @blp.arguments(PlainStoreSchema)

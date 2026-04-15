@@ -15,8 +15,7 @@ import newrelic.agent
 CURRENT_ENV = os.getenv("ENVIRONMENT", "local")
 newrelic.agent.initialize('newrelic.ini', environment=CURRENT_ENV)
 
-def create_app(db_url=None):
-    print(f"Running in {CURRENT_ENV} MODE")
+def create_app(db_url=None) -> Flask:
     app = Flask(__name__)
     load_dotenv()
     app.config["PROPAGATE_EXCEPTIONS"] = True
