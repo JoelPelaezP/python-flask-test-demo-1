@@ -4,7 +4,7 @@
 1. Run docker services
 `docker compose up --build --force-recreate --no-deps -d`
 
-2. Generate Migration Script (flask app needs to be running):
+2. Generate Migration Script (flask app needs to be running) Development mode
 `docker-compose exec <flask-app-service> flask db migrate -m "Initial migration"`
 
 
@@ -26,4 +26,6 @@ For each environment we need to set a group with specific config and values, sam
 `[newrelic:development]`
 `monitor_mode = true`
 `app_name = <app-name-for-dev-env>`
-`license_key = <license-key-for-app-name-for-dev-env>`
+
+5. Set license key per environment using the general APM environment variable 
+`NEW_RELIC_LICENSE_KEY = <license-key-for-app-name-for-specific-env>`

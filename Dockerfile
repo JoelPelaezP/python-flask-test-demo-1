@@ -1,7 +1,7 @@
 FROM python:3.10
 
 # Port is only to run development mode, but for PROD using Gunicorn we need to set port on CMD command
-EXPOSE 5000
+# EXPOSE 5000
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
@@ -11,12 +11,14 @@ COPY . .
 # CMD command to run app in development mode
 #CMD [ "flask", "run", "--host", "0.0.0.0" ]
 
-CMD ["python", "__main__.py"]
-#CMD command to run app in PROD mode
+# Run app using python command
+# CMD ["python", "__main__.py"]
+
+#CMD command to run app in Non-dev mode
 # CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:create_app()"]
 
 # CMD command to run docker-entrypoint.sh
-# CMD ["/bin/bash", "docker-entrypoint.sh"]
+CMD ["/bin/bash", "docker-entrypoint.sh"]
 
 
 # docker command to run app

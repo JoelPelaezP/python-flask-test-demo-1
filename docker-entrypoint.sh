@@ -2,4 +2,6 @@
 
 flask db upgrade
 
-exec flask run --host 0.0.0.0 
+exec python __main__.py
+
+#exec flask run --host 0.0.0.0 

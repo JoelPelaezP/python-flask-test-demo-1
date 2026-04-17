@@ -42,10 +42,10 @@ def start_service():
         print(f"Running in {CURRENT_ENV} MODE")
 
         if CURRENT_ENV in ('development', 'local'):
-            app.run(host="0.0.0.0", port=5000)
+            app.run(host="0.0.0.0", port=5005)
         else:
             print("Running Service with GUNICORN workers")
-            g_app = GunicornWrapper(WsgiToAsgi(app), 5000)
+            g_app = GunicornWrapper(WsgiToAsgi(app), 5005)
             g_app.run()
     except Exception as e:
         print(f"ERROR running service: {e}")
