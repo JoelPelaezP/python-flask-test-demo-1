@@ -1,15 +1,17 @@
 services:
-  flask-test-app:
+  python-flask-api:
     build: .
+    image: python-flask-api:dev
+    container_name: python-flask-api
     ports:
       - '5005:5005'
     volumes:
       - .:/app
     depends_on:
-      - flask-test-db
+      - python-flask-db
     env_file:
       - ./.env
-  flask-test-db:
+  python-flask-db:
     image: postgres:15
     ports:
       - '5432:5432'
