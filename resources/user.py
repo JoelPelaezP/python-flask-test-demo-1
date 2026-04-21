@@ -27,7 +27,6 @@ class UserList(MethodView):
             )
             with app.db_session() as db_session:
                 db_session.add(user)
-                db_session.commit()
                 return user
         except SQLAlchemyError:
             abort(500, 'Error ocurred internally')
@@ -55,7 +54,6 @@ class User(MethodView):
                 user = db_session.query(UserModel).filter(UserModel.email == email).one_or_none()
                 if user:
                     db_session.delete(user)
-                    db_session.commit()
                     return {"message": "User deleted"}
 
                 abort(404, message="User not found.")

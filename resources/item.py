@@ -51,7 +51,6 @@ class Item(MethodView):
                     item = ItemModel(**item_data)
 
                 db_session.add(item)
-                db_session.commit()
                 return item
         except KeyError:
             abort(404, message="Item not found.")
@@ -73,7 +72,6 @@ class ItemList(MethodView):
         try:
             with app.db_session() as db_session:
                 db_session.add(item)
-                db_session.commit()
         except SQLAlchemyError:
             return abort(500, "Error courred internally")
 

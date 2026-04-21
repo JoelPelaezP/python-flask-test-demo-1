@@ -27,7 +27,6 @@ class Store(MethodView):
             with app.db_session() as db_session:
                 store = db_session.query(StoreModel).filter(StoreModel.id == int(store_id)).one_or_none()
                 db_session.delete(store)
-                db_session.commit()
                 return {"message": "Store deleted."}
         except KeyError:
             abort(404, message="Store not found.")
@@ -64,7 +63,6 @@ class StoreList(MethodView):
         try:
             with app.db_session() as db_session:
                 db_session.add(store)
-                db_session.commit()
         except SQLAlchemyError:
             abort(500, 'Error ocurred internally')
         return store

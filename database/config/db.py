@@ -2,19 +2,14 @@ import psycopg2
 import sqlalchemy.pool
 from sqlalchemy.orm import scoped_session, sessionmaker, Session
 from contextlib import contextmanager
-from typing import cast
+from typing import Any, cast
+from utility.pydantic import PydanticBaseSettings
 
 def db_start() -> Session:
     print("INFO: Initializing DB")
 
     def get_connection():
-        connection = {
-            "host" : "python-flask-db",
-            "dbname":"flask_test_dev",
-            "user":"postgres",
-            "password":"Chr0me#1",
-            "port":"5432"
-        }
+        connection = get_db_connection()
         return psycopg2.connect(**connection)
     
     db_pool = sqlalchemy.pool.QueuePool(get_connection, pool_size=3, max_overflow=2, timeout=5)
@@ -42,12 +37,30 @@ def get_scoped_session(session: Session):
 
 
 def build_connection_uri():
-    connection = {
-        "host" : "localhost",
-        "dbname":"flask_test_dev",
-        "user":"postgres",
-        "password":"Chr0me#1",
-        "port":"5432"
-    }
+    connection = get_db_connection()
 
     return f"postgresql://{connection['user']}:{connection['password']}@{connection['host']}:{connection['port']}/{connection['dbname']}"
+
+class DBConfig(PydanticBaseSettings):
+    user:str
+    password:str
+    host: str
+    port:int
+    dbname:str
+
+    class Config:
+        env_prefix = "DATABASE_"
+
+def get_db_config()-> DBConfig:
+    return DBConfig()
+
+def get_db_connection()-> dict[str:Any]:
+    db_config:DBConfig = get_db_config()
+    connection = {
+        "host" : db_config.host,
+        "dbname":db_config.dbname,
+        "user":db_config.user,
+        "password":db_config.password,
+        "port":db_config.port
+    }
+    return connection
