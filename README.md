@@ -1,6 +1,7 @@
 # TO BE Implemented
 
 # Migrations
+## Migration with flask_sqlalchemy
 1. Run docker services
 `docker compose up --build --force-recreate --no-deps -d`
 
@@ -8,6 +9,18 @@
 `docker-compose exec <flask-app-service> flask db migrate -m "Initial migration"`
 
 
+## Migration with Alembic
+1. Install `alembic` package
+`pip install alembic`
+
+2. Initialize `alembic` in workspace, it will generate folder and alembic.ini file in specific folder
+`alembic init database/migrations`
+
+3. Generate first script
+`alembic --config ./database/migrations/alembic.ini revision --autogenerate -m "initial script"`
+
+4. Apply migrations to database
+`alembic --config ./database/migrations/alembic.ini upgrade head `
 # New Relic Integration
 
 1. install new relic package using pip command

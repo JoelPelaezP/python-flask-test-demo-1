@@ -13,3 +13,4 @@ newrelic
 requests
 uvicorn
 asgiref
+alembic

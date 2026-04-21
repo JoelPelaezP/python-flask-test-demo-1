@@ -13,6 +13,7 @@ services:
       - ./.env
   python-flask-db:
     image: postgres:15
+    container_name: python-flask-db
     ports:
       - '5432:5432'
     environment:

@@ -1,21 +1,26 @@
 from blocklist import BLOCKLIST
-from flask import Flask, jsonify
+from flask import Flask, jsonify, g
 from flask_smorest import Api
 from flask_migrate import Migrate
-from db import db_instance
+import database.config.db as db
 import os
-import models
 from resources.item import blp as ItemBlueprint
 from resources.store import blp as StoreBlueprint
 from resources.user import blp as UserBlueprint
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
 import newrelic.agent
+from contextlib import contextmanager
 
 CURRENT_ENV = os.getenv("ENVIRONMENT", "local")
 newrelic.agent.initialize('newrelic.ini', environment=CURRENT_ENV)
 
 def create_app(db_url=None) -> Flask:
+    db_session = db.db_start()
+
+    def get_db_session():
+        return db_session
+    
     app = Flask(__name__)
     load_dotenv()
     app.config["PROPAGATE_EXCEPTIONS"] = True
@@ -25,12 +30,12 @@ def create_app(db_url=None) -> Flask:
     app.config["OPENAPI_URL_PREFIX"] = "/"
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
-    app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    #app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
+    #app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = "secret_key"
 
-
-    db_instance.init_app(app)
+    # Used when connecting app to `from flask_sqlalchemy import SQLAlchemy` object
+    # db_instance.init_app(app)
 
     #using flask_migrate to handle db upgrade
     #using this requires to remove sql alchemy code to generate tables in line 83-84
@@ -40,11 +45,16 @@ def create_app(db_url=None) -> Flask:
     #flask db migrate
     #run to apply migrations (changes)
     #flask db upgrade
-    migrate = Migrate(app, db_instance)
+    
+    #migrate = Migrate(app, db.db_instance)
 
     api = Api(app)
 
     jwt = JWTManager(app)
+
+    @app.before_request
+    def init_db():
+        g.db_session = get_db_session()
 
     #just for testing
     @jwt.additional_claims_loader
@@ -53,7 +63,6 @@ def create_app(db_url=None) -> Flask:
             return {"is_admin": True}
         
         return {"is_admin": False}
-
 
     # just for testing logout
     @jwt.token_in_blocklist_loader
@@ -91,12 +100,18 @@ def create_app(db_url=None) -> Flask:
             jsonify({"message": "Request does not contain an access token", "error": "authorization_required"}), 401
         )
 
-
-    # with app.app_context():
-    #     db_instance.create_all()
-
     api.register_blueprint(ItemBlueprint)
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(UserBlueprint)
 
     return app
+
+@contextmanager
+def db_session():
+    session = g.get("db_session")
+
+    if session is  None:
+        raise Exception("ERROR: Missing DB")
+
+    with db.get_scoped_session(session) as _scoped_session:
+        yield _scoped_session
