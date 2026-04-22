@@ -1,11 +1,14 @@
-from app import create_app
-from flask import Flask
-import gunicorn.app.base
-import os
 import multiprocessing
+import os
+
+import gunicorn.app.base
 from asgiref.wsgi import WsgiToAsgi
+from flask import Flask
+
+from app import create_app
 
 CURRENT_ENV = os.getenv("ENVIRONMENT", "local")
+
 
 class GunicornWrapper(gunicorn.app.base.BaseApplication):
     def __init__(self, app: Flask, port: int):
@@ -15,8 +18,8 @@ class GunicornWrapper(gunicorn.app.base.BaseApplication):
         self.options = {
             "bind": f"0.0.0.0:{port}",
             "workers": workers,
-            "threads":threads,
-            "worker_class":"uvicorn.workers.UvicornWorker"
+            "threads": threads,
+            "worker_class": "uvicorn.workers.UvicornWorker",
         }
 
         print(f"Service Running with workers: {workers}, threads: {threads}")
@@ -25,10 +28,14 @@ class GunicornWrapper(gunicorn.app.base.BaseApplication):
         super().__init__()
 
     def load_config(self):
-        config = {k:v for k, v, in self.options.items() if k in self.cfg.settings and v is not None}
+        config = {
+            k: v
+            for k, v, in self.options.items()
+            if k in self.cfg.settings and v is not None
+        }
 
         for k, v in config.items():
-            self.cfg.set(k.lower(), v )
+            self.cfg.set(k.lower(), v)
 
     def load(self) -> Flask:
         print(f"Starting worker...")
@@ -41,7 +48,7 @@ def start_service():
 
         print(f"Running in {CURRENT_ENV} MODE")
 
-        if CURRENT_ENV in ('development', 'local'):
+        if CURRENT_ENV in ("development", "local"):
             app.run(host="0.0.0.0", port=5005)
         else:
             print("Running Service with GUNICORN workers")
@@ -49,5 +56,6 @@ def start_service():
             g_app.run()
     except Exception as e:
         print(f"ERROR running service: {e}")
+
 
 start_service()

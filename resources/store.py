@@ -1,9 +1,10 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from schemas.schemas import PlainStoreSchema, StoreSchema
-from database.models import StoreModel
 from sqlalchemy.exc import SQLAlchemyError
+
 import app
+from database.models import StoreModel
+from schemas.schemas import PlainStoreSchema, StoreSchema
 
 blp = Blueprint("Stores", "stores", description="Operations on stores")
 
@@ -14,10 +15,14 @@ class Store(MethodView):
     def get(cls, store_id):
         try:
             with app.db_session() as db_session:
-                store = db_session.query(StoreModel).filter(StoreModel.id == int(store_id)).one_or_none()
+                store = (
+                    db_session.query(StoreModel)
+                    .filter(StoreModel.id == int(store_id))
+                    .one_or_none()
+                )
                 if store:
                     return store
-            
+
             abort(404, message="Store not found.")
         except:
             abort(404, message="Store not found.")
@@ -25,18 +30,26 @@ class Store(MethodView):
     def delete(cls, store_id):
         try:
             with app.db_session() as db_session:
-                store = db_session.query(StoreModel).filter(StoreModel.id == int(store_id)).one_or_none()
+                store = (
+                    db_session.query(StoreModel)
+                    .filter(StoreModel.id == int(store_id))
+                    .one_or_none()
+                )
                 db_session.delete(store)
                 return {"message": "Store deleted."}
         except KeyError:
             abort(404, message="Store not found.")
-            
+
     @blp.arguments(PlainStoreSchema)
     @blp.response(201, StoreSchema)
     def put(cls, store_data, store_id):
         try:
             with app.db_session() as db_session:
-                store = db_session.query(StoreModel).filter(StoreModel.id == int(store_id)).one_or_none()
+                store = (
+                    db_session.query(StoreModel)
+                    .filter(StoreModel.id == int(store_id))
+                    .one_or_none()
+                )
 
                 if store:
                     store.name = store_data["name"]
@@ -47,6 +60,7 @@ class Store(MethodView):
                 return store
         except SQLAlchemyError:
             abort(500, "Error ocurred internally")
+
 
 @blp.route("/store")
 class StoreList(MethodView):
@@ -64,5 +78,5 @@ class StoreList(MethodView):
             with app.db_session() as db_session:
                 db_session.add(store)
         except SQLAlchemyError:
-            abort(500, 'Error ocurred internally')
+            abort(500, "Error ocurred internally")
         return store

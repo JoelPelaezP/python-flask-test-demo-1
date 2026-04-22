@@ -17,13 +17,13 @@ Generate Migration Script (flask app needs to be running) Development mode
 ```sh
 pip install alembic
 ```
+
 2. Initialize `alembic` in workspace, it will generate folder and `alembic.ini` file in specific folder
 ```sh
 alembic init database/migrations
 ```
 
 3. Generate first script
-
 ```sh
 alembic --config ./database/migrations/alembic.ini revision --autogenerate -m "custom_message"
 ```

@@ -1,10 +1,11 @@
 from flask.views import MethodView
+from flask_jwt_extended import get_jwt, jwt_required
 from flask_smorest import Blueprint, abort
-from flask_jwt_extended import jwt_required, get_jwt
 from sqlalchemy.exc import SQLAlchemyError
-from database.models import ItemModel
-from schemas.schemas import ItemSchema, PlainItemSchema, ItemUpdateSchema
+
 import app
+from database.models import ItemModel
+from schemas.schemas import ItemSchema, ItemUpdateSchema, PlainItemSchema
 
 blp = Blueprint("Items", "items", description="Operations on items")
 
@@ -15,10 +16,14 @@ class Item(MethodView):
     def get(self, item_id):
         try:
             with app.db_session() as db_session:
-                item = db_session.query(ItemModel).filter(ItemModel.id == int(item_id)).one_or_none()
+                item = (
+                    db_session.query(ItemModel)
+                    .filter(ItemModel.id == int(item_id))
+                    .one_or_none()
+                )
                 if item:
                     return item
-            
+
                 abort(404, message="Item not found.")
         except KeyError:
             abort(404, message="Item not found.")
@@ -26,13 +31,17 @@ class Item(MethodView):
     @jwt_required()
     def delete(self, item_id):
         try:
-            #for testing claims in jwt, works with @jwt.additional_claims_loader
-            jwt= get_jwt()
+            # for testing claims in jwt, works with @jwt.additional_claims_loader
+            jwt = get_jwt()
             if jwt.get("is_admin") == True:
-                abort(401, message="Admin privilege required.") 
+                abort(401, message="Admin privilege required.")
 
             with app.db_session() as db_session:
-                item = db_session.query(ItemModel).filter(ItemModel.id == int(item_id)).one_or_none()
+                item = (
+                    db_session.query(ItemModel)
+                    .filter(ItemModel.id == int(item_id))
+                    .one_or_none()
+                )
                 db_session.delete(item)
             return {"message": "Item deleted."}
         except KeyError:
@@ -43,8 +52,12 @@ class Item(MethodView):
     def put(self, item_data, item_id):
         try:
             with app.db_session() as db_session:
-                item = db_session.query(ItemModel).filter(ItemModel.id == int(item_id)).one_or_none()
-                
+                item = (
+                    db_session.query(ItemModel)
+                    .filter(ItemModel.id == int(item_id))
+                    .one_or_none()
+                )
+
                 if item:
                     item.name = item_data["name"]
                 else:
@@ -54,6 +67,7 @@ class Item(MethodView):
                 return item
         except KeyError:
             abort(404, message="Item not found.")
+
 
 @blp.route("/item")
 class ItemList(MethodView):

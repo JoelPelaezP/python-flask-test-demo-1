@@ -15,3 +15,5 @@ uvicorn
 asgiref
 alembic
 pydantic-settings
+isort
+black
