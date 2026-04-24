@@ -17,10 +17,21 @@ CURRENT_ENV = os.getenv("ENVIRONMENT", "local")
 newrelic.agent.initialize("newrelic.ini", environment=CURRENT_ENV)
 
 
-def create_app(db_url=None) -> Flask:
-    db_session = db.db_start()
+def create_app(
+    db_config: db.DBConfig = None, use_db_factory_session: bool = False
+) -> Flask:
+    db_session = None
+
+    if use_db_factory_session is False:
+        db_session = db.db_start()
 
     def get_db_session():
+        if use_db_factory_session:
+            import database.models.factories as db_factory
+
+            # for unit tests
+            return db_factory.db_session
+
         return db_session
 
     app = Flask(__name__)

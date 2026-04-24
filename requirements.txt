@@ -17,3 +17,5 @@ alembic
 pydantic-settings
 isort
 black
+pytest
+factory-boy

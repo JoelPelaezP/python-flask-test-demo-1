@@ -4,7 +4,7 @@ import sqlalchemy
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from database.config.db import build_connection_uri
+from database.config.db import build_connection_url, get_db_config
 from database.models.base import Base
 
 # this is the Alembic Config object, which provides
@@ -28,7 +28,8 @@ target_metadata = Base.metadata
 # ... etc.
 
 # set database url
-url = build_connection_uri()
+
+url = build_connection_url(get_db_config())
 
 
 def run_migrations_offline() -> None:

@@ -47,3 +47,6 @@ format-check:
 format:
 	$(DOCKER_RUN_CMD) isort . --atomic
 	$(DOCKER_RUN_CMD) black .
+
+test:
+	$(DOCKER_RUN_CMD) pytest $(args)
