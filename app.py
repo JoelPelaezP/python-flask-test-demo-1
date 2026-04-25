@@ -21,15 +21,15 @@ def create_app(
     db_config: db.DBConfig = None, use_db_factory_session: bool = False
 ) -> Flask:
     db_session = None
-
+    db_config = db_config if db_config is not None else db.get_db_config()
     if use_db_factory_session is False:
-        db_session = db.db_start()
+        db_session = db.db_start(db_config)
 
     def get_db_session():
+        # for unit tests
         if use_db_factory_session:
             import database.models.factories as db_factory
 
-            # for unit tests
             return db_factory.db_session
 
         return db_session

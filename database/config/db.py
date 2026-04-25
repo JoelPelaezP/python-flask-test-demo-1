@@ -43,9 +43,7 @@ def db_start(db_config: DBConfig = None) -> Session:
     return cast(Session, session)
 
 
-def get_db_engine(db_config: DBConfig = None):
-    db_config = db_config if db_config is not None else get_db_config()
-
+def get_db_engine(db_config: DBConfig):
     def get_connection():
         connection = get_db_connection(db_config)
         return psycopg2.connect(**connection)
