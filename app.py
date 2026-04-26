@@ -23,9 +23,9 @@ def create_app(
     db_session = None
     db_config = db_config if db_config is not None else db.get_db_config()
     if use_db_factory_session is False:
-        db_session = db.db_start(db_config)
+        db_session = db.get_db_session(db_config)
 
-    def get_db_session():
+    def __get_db_session():
         # for unit tests
         if use_db_factory_session:
             import database.models.factories as db_factory
@@ -53,7 +53,7 @@ def create_app(
 
     @app.before_request
     def init_db():
-        g.db_session = get_db_session()
+        g.db_session = __get_db_session()
 
     # just for testing
     @jwt.additional_claims_loader

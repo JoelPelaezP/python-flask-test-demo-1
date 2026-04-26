@@ -15,55 +15,51 @@ import database.config.db as db
 from database.models.base import Base
 
 
-def db_test_create_schema(db_config):
-    sql_create_schema = f"CREATE SCHEMA IF NOT EXISTS {db_config.schema_name} AUTHORIZATION {db_config.user}"
+def test_db_create_schema(test_db_config):
+    sql = f"CREATE SCHEMA IF NOT EXISTS {test_db_config.schema_name} AUTHORIZATION {test_db_config.user}"
 
-    db_engine = db.get_db_engine(db_config)
+    db_engine = db.get_db_engine(test_db_config)
     with db_engine.begin() as connection:
-        connection.execute(text(sql_create_schema))
-
-    print(f"INFO: Created schema {db_config.schema_name}")
+        connection.execute(text(sql))
 
 
-def db_test_drop_schema(db_config):
-    sql_drop_schema = f"DROP SCHEMA {db_config.schema_name} CASCADE"
+def test_db_drop_schema(test_db_config):
+    sql = f"DROP SCHEMA {test_db_config.schema_name} CASCADE"
 
-    db_engine = db.get_db_engine(db_config)
+    db_engine = db.get_db_engine(test_db_config)
     with db_engine.begin() as connection:
-        connection.execute(text(sql_drop_schema))
-
-    print(f"INFO: Dropped schema {db_config.schema_name} ")
+        connection.execute(text(sql))
 
 
 @pytest.fixture(scope="session")
-def db_test_schema(db_config):
-    db_test_create_schema(db_config)
+def test_db_schema(test_db_config):
+    test_db_create_schema(test_db_config)
 
-    yield db_config
+    yield test_db_config
 
-    db_test_drop_schema(db_config)
+    test_db_drop_schema(test_db_config)
 
 
 @pytest.fixture(scope="session")
-def db_test(db_test_schema):
-    db_engine = db.get_db_engine(db_test_schema)
+def test_db_engine(test_db_schema):
+    db_engine = db.get_db_engine(test_db_schema)
     Base.metadata.create_all(bind=db_engine)
-    db_session = db.db_start(db_test_schema)
+    db_session = db.get_db_session(test_db_schema)
     db_session.close()
 
     return db_engine
 
 
 @pytest.fixture(scope="session")
-def db_session_maker(db_test):
+def test_db_session_maker(test_db_engine):
     return sessionmaker(autocommit=False, expire_on_commit=False)
 
 
 @pytest.fixture(scope="session")
-def test_db_session(db_test, db_session_maker):
-    c = db_test.connect()
+def test_db_session(test_db_engine, test_db_session_maker):
+    c = test_db_engine.connect()
     t = c.begin()
-    s = db_session_maker(bind=c, join_transaction_mode="create_savepoint")
+    s = test_db_session_maker(bind=c, join_transaction_mode="create_savepoint")
 
     yield s
 
@@ -73,27 +69,27 @@ def test_db_session(db_test, db_session_maker):
 
 
 @pytest.fixture(scope="session")
-def init_factory_session(test_db_session):
+def test_init_factory_session(test_db_session):
     import database.models.factories as db_factory
 
     db_factory.db_session = test_db_session
 
 
 @pytest.fixture(scope="session")
-def db_config():
+def test_db_config():
     return db.DBConfig(
         user="postgres",
         password="Chr0me#1",
         dbname="flask_test_dev",
-        schema_name=f"api_db_test_schema_{uuid.uuid4().int}",
+        schema_name=f"api_test_db_schema_{uuid.uuid4().int}",
     )
 
 
 @pytest.fixture(scope="session")
-def flask_app(init_factory_session, db_config):
-    return app.create_app(db_config, True)
+def test_flask_app(test_init_factory_session, test_db_config):
+    return app.create_app(test_db_config, True)
 
 
 @pytest.fixture
-def test_app_client(flask_app):
-    return flask_app.test_client()
+def test_app_client(test_flask_app):
+    return test_flask_app.test_client()

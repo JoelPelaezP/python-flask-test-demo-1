@@ -24,13 +24,11 @@ def get_db_config() -> DBConfig:
     return DBConfig()
 
 
-def db_start(db_config: DBConfig = None) -> Session:
-    print("INFO: Initializing DB")
+def get_db_session(db_config: DBConfig = None) -> Session:
+    print("Initializing DB")
 
     db_engine = get_db_engine(db_config)
     db_engine.connect()
-
-    print("INFO: Successfully connected to DB")
 
     session = scoped_session(
         session_factory=sessionmaker(
@@ -39,6 +37,8 @@ def db_start(db_config: DBConfig = None) -> Session:
     )
 
     db_engine.dispose()
+
+    print("Successfully connected to DB")
 
     return cast(Session, session)
 
@@ -68,7 +68,7 @@ def get_scoped_session(session: Session):
         session.close()
 
 
-def build_connection_url(db_config: DBConfig):
+def get_connection_url(db_config: DBConfig):
     connection = get_db_connection(db_config)
 
     return f"postgresql://{connection['user']}:{connection['password']}@{connection['host']}:{connection['port']}/{connection['dbname']}"

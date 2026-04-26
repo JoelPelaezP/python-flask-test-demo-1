@@ -4,8 +4,6 @@ import factory
 from sqlalchemy.orm import Session, scoped_session
 
 import database.config.db as db
-
-# from database.models import StoreModel
 from database.models.store import StoreModel
 
 db_session: Session | None = None
@@ -15,7 +13,7 @@ def get_db_session() -> Session:
     global db_session
 
     if db_session is None:
-        db_session = db.db_start()
+        db_session = db.get_db_session()
 
     return db_session
 
