@@ -50,3 +50,6 @@ format:
 
 test:
 	$(DOCKER_RUN_CMD) pytest $(args)
+
+task-check-weather:
+	$(DOCKER_RUN_CMD) python tasks/__init__.py
