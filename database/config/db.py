@@ -2,8 +2,9 @@ from contextlib import contextmanager
 from typing import Any, cast
 
 import psycopg2
-import sqlalchemy.pool
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, scoped_session, sessionmaker
+from sqlalchemy.pool import QueuePool
 
 from utility.pydantic import PydanticBaseSettings
 
@@ -48,10 +49,8 @@ def get_db_engine(db_config: DBConfig):
         connection = get_db_connection(db_config)
         return psycopg2.connect(**connection)
 
-    db_pool = sqlalchemy.pool.QueuePool(
-        get_connection, pool_size=3, max_overflow=2, timeout=5
-    )
-    db_engine = sqlalchemy.create_engine("postgresql://", pool=db_pool)
+    db_pool = QueuePool(get_connection, pool_size=5, max_overflow=2, timeout=5)
+    db_engine = create_engine("postgresql://", pool=db_pool)
 
     return db_engine
 
