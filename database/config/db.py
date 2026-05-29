@@ -2,7 +2,7 @@ from contextlib import contextmanager
 from typing import Any, cast
 
 import psycopg2
-from sqlalchemy import create_engine
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, scoped_session, sessionmaker
 from sqlalchemy.pool import QueuePool
 
@@ -44,7 +44,7 @@ def get_db_session(db_config: DBConfig = None) -> Session:
     return cast(Session, session)
 
 
-def get_db_engine(db_config: DBConfig):
+def get_db_engine(db_config: DBConfig) -> Engine:
     def get_connection():
         connection = get_db_connection(db_config)
         return psycopg2.connect(**connection)
@@ -67,7 +67,7 @@ def get_scoped_session(session: Session):
         session.close()
 
 
-def get_connection_url(db_config: DBConfig):
+def get_connection_url(db_config: DBConfig) -> str:
     connection = get_db_connection(db_config)
 
     return f"postgresql://{connection['user']}:{connection['password']}@{connection['host']}:{connection['port']}/{connection['dbname']}"

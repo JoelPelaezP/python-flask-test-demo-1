@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask, g, jsonify
 from flask_jwt_extended import JWTManager
 from flask_smorest import Api
+from sqlalchemy.orm import Session
 
 import database.config.db as db
 from blocklist import BLOCKLIST
@@ -20,12 +21,12 @@ newrelic.agent.initialize("newrelic.ini", environment=CURRENT_ENV)
 def create_app(
     db_config: db.DBConfig = None, use_db_factory_session: bool = False
 ) -> Flask:
-    db_session = None
+    db_session: Session | None = None
     db_config = db_config if db_config is not None else db.get_db_config()
     if use_db_factory_session is False:
         db_session = db.get_db_session(db_config)
 
-    def __get_db_session():
+    def __get_db_session() -> Session:
         # for unit tests
         if use_db_factory_session:
             import database.models.factories as db_factory
@@ -124,7 +125,7 @@ def create_app(
 
 @contextmanager
 def db_session():
-    session = g.get("db_session")
+    session: Session | None = g.get("db_session")
 
     if session is None:
         raise Exception("ERROR: Missing DB")
