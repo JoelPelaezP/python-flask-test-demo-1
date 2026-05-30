@@ -6,7 +6,9 @@ import app
 from database.models import StoreModel
 from external_services.weather.factory import create_client
 from schemas.schemas import PlainStoreSchema, StoreSchema
+import utility.logger
 
+logger = utility.logger.get_logger(__name__)
 blp = Blueprint("Stores", "stores", description="Operations on stores")
 
 
@@ -71,7 +73,7 @@ class StoreList(MethodView):
 
         response = client.get_data()
 
-        print("Result", response)
+        logger.info("Weather API Response")
 
         with app.db_session() as db_session:
             return db_session.query(StoreModel).all()

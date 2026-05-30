@@ -1,6 +1,6 @@
 import multiprocessing
 import os
-
+import utility.logger
 import gunicorn.app.base
 from asgiref.wsgi import WsgiToAsgi
 from flask import Flask
@@ -44,6 +44,7 @@ class GunicornWrapper(gunicorn.app.base.BaseApplication):
 
 def start_service():
     try:
+        utility.logger.init(__package__)
         app = create_app()
 
         print(f"Running in {CURRENT_ENV} MODE")

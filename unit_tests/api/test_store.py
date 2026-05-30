@@ -5,18 +5,22 @@ from flask.testing import FlaskClient
 from werkzeug.test import TestResponse
 
 from database.models import StoreFactory, StoreModel
-
+import logging
 
 @pytest.fixture()
 def store():
     return StoreFactory.create()
 
 
-def test_get_stores(test_app_client):
+def test_get_stores(test_app_client, caplog):
+    caplog.set_level(logging.INFO)
     os.environ["WEATHER_BASE_URL"] = ""
     response = test_app_client.get("/store")
 
     assert response.status_code == 200
+
+    for m in caplog.messages:
+        print(m)
 
 
 def test_get_specific_store_returns_ok(test_app_client: FlaskClient, store):
