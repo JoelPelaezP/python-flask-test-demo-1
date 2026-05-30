@@ -4,6 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 import app
 from database.models import StoreModel
+from external_services.weather.factory import create_client
 from schemas.schemas import PlainStoreSchema, StoreSchema
 
 blp = Blueprint("Stores", "stores", description="Operations on stores")
@@ -66,6 +67,12 @@ class Store(MethodView):
 class StoreList(MethodView):
     @blp.response(200, StoreSchema(many=True))
     def get(cls):
+        client = create_client()
+
+        response = client.get_data()
+
+        print("Result", response)
+
         with app.db_session() as db_session:
             return db_session.query(StoreModel).all()
 
