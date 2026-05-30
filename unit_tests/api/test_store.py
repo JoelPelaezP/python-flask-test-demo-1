@@ -1,3 +1,4 @@
+import logging
 import os
 
 import pytest
@@ -5,7 +6,7 @@ from flask.testing import FlaskClient
 from werkzeug.test import TestResponse
 
 from database.models import StoreFactory, StoreModel
-import logging
+
 
 @pytest.fixture()
 def store():

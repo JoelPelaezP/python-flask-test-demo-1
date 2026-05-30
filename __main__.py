@@ -1,10 +1,11 @@
 import multiprocessing
 import os
-import utility.logger
+
 import gunicorn.app.base
 from asgiref.wsgi import WsgiToAsgi
 from flask import Flask
 
+import utility.logger
 from app import create_app
 
 CURRENT_ENV = os.getenv("ENVIRONMENT", "local")

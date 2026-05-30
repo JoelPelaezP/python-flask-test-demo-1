@@ -3,10 +3,10 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
 import app
+import utility.logger
 from database.models import StoreModel
 from external_services.weather.factory import create_client
 from schemas.schemas import PlainStoreSchema, StoreSchema
-import utility.logger
 
 logger = utility.logger.get_logger(__name__)
 blp = Blueprint("Stores", "stores", description="Operations on stores")

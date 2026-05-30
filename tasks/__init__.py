@@ -8,6 +8,7 @@ sys.path.insert(1, os.getcwd())
 import contextlib
 
 import app
+from database.models import StoreModel
 
 
 @contextlib.contextmanager
