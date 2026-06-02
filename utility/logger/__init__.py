@@ -3,7 +3,6 @@ import logging.config
 
 
 def get_logger(file_name):
-    print("Filename", file_name)
     return logging.getLogger(file_name)
 
 

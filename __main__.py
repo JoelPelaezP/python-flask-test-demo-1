@@ -8,6 +8,8 @@ from flask import Flask
 import utility.logger
 from app import create_app
 
+logger = utility.logger.get_logger(__name__)
+
 CURRENT_ENV = os.getenv("ENVIRONMENT", "local")
 
 
@@ -23,7 +25,7 @@ class GunicornWrapper(gunicorn.app.base.BaseApplication):
             "worker_class": "uvicorn.workers.UvicornWorker",
         }
 
-        print(f"Service Running with workers: {workers}, threads: {threads}")
+        logger.info(f"Service Running with workers: {workers}, threads: {threads}")
 
         self.application = app
         super().__init__()
@@ -39,7 +41,7 @@ class GunicornWrapper(gunicorn.app.base.BaseApplication):
             self.cfg.set(k.lower(), v)
 
     def load(self) -> Flask:
-        print(f"Starting worker...")
+        logger.info(f"Starting worker...")
         return self.application
 
 
@@ -48,16 +50,16 @@ def start_service():
         utility.logger.init(__package__)
         app = create_app()
 
-        print(f"Running in {CURRENT_ENV} MODE")
+        logger.info(f"Running in {CURRENT_ENV} MODE")
 
         if CURRENT_ENV in ("development", "local"):
             app.run(host="0.0.0.0", port=5005)
         else:
-            print("Running Service with GUNICORN workers")
+            logger.info("Running Service with GUNICORN workers")
             g_app = GunicornWrapper(WsgiToAsgi(app), 5005)
             g_app.run()
     except Exception as e:
-        print(f"ERROR running service: {e}")
+        logger.exception(f"ERROR running service: {e}")
 
 
 start_service()

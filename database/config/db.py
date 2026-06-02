@@ -6,7 +6,10 @@ from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, scoped_session, sessionmaker
 from sqlalchemy.pool import QueuePool
 
+import utility.logger
 from utility.pydantic import PydanticBaseSettings
+
+logger = utility.logger.get_logger(__name__)
 
 
 class DBConfig(PydanticBaseSettings):
@@ -26,7 +29,10 @@ def get_db_config() -> DBConfig:
 
 
 def get_db_session(db_config: DBConfig = None) -> Session:
-    print("Initializing DB")
+    logger.info("Initializing DB")
+
+    if db_config is None:
+        db_config = get_db_config()
 
     db_engine = get_db_engine(db_config)
     db_engine.connect()
@@ -39,7 +45,7 @@ def get_db_session(db_config: DBConfig = None) -> Session:
 
     db_engine.dispose()
 
-    print("Successfully connected to DB")
+    logger.info("Successfully connected to DB")
 
     return cast(Session, session)
 
