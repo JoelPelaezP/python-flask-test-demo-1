@@ -1,41 +1,66 @@
-var builder = WebApplication.CreateBuilder(args);
+// var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// // Add services to the container.
+// // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// builder.Services.AddOpenApi();
 
-var app = builder.Build();
+// var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// // Configure the HTTP request pipeline.
+// if (app.Environment.IsDevelopment())
+// {
+//     app.MapOpenApi();
+// }
+
+// app.UseHttpsRedirection();
+
+// var summaries = new[]
+// {
+//     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+// };
+
+// app.MapGet("/weatherforecast", () =>
+// {
+//     var forecast =  Enumerable.Range(1, 5).Select(index =>
+//         new WeatherForecast
+//         (
+//             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+//             Random.Shared.Next(-20, 55),
+//             summaries[Random.Shared.Next(summaries.Length)]
+//         ))
+//         .ToArray();
+//     return forecast;
+// })
+// .WithName("GetWeatherForecast");
+
+// app.Run();
+
+// record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+// {
+//     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+// }
+
+namespace DocumentGenerator
 {
-    app.MapOpenApi();
-}
+    using System;
 
-app.UseHttpsRedirection();
+    public static class Program
+    {
+        public static IServiceProvider ServiceProvider { get; private set; }
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+        public static void Main(string[] args)
+        {
+            IHost build = CreateHostBuilder(args).Build();
+            ServiceProvider = build.Services;
+            build.Run();
+        }
+        
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
+        }
+    }
 }

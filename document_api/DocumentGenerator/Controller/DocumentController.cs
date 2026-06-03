@@ -6,12 +6,19 @@ namespace DocumentGenerator.Controller
     using System.IO;
 
     [ApiController]
+    [Route("api/document")]
     public class DocumentController : ControllerBase
     {
         const string SURVEY_TEMPPLATE = "Assets/SurveyTest.html";
         public DocumentController()
         {
 
+        }
+
+        [HttpGet]
+        public ActionResult Get()
+        {
+            return Ok("Document Service is Running!");
         }
 
         [HttpPost]
