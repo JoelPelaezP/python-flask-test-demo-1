@@ -1,0 +1,9 @@
+services:
+  dotnet-document-generator:
+    build: .
+    image: dotnet-document-generator:dev
+    container_name: dotnet-document-generator
+    ports: 
+      - '8080:8080'
+    env_file:
+      - ./.env

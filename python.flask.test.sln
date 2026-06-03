@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "document_api", "document_api", "{8DD0A0D5-FF5E-A08C-33A3-B4824EB78F6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentGenerator", "document_api\DocumentGenerator\DocumentGenerator.csproj", "{36F2B4EB-2DBC-0185-D9BE-4367A59EE46D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{36F2B4EB-2DBC-0185-D9BE-4367A59EE46D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36F2B4EB-2DBC-0185-D9BE-4367A59EE46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36F2B4EB-2DBC-0185-D9BE-4367A59EE46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36F2B4EB-2DBC-0185-D9BE-4367A59EE46D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{36F2B4EB-2DBC-0185-D9BE-4367A59EE46D} = {8DD0A0D5-FF5E-A08C-33A3-B4824EB78F6F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA300A82-7BE0-402F-AD1C-57722946980A}
+	EndGlobalSection
+EndGlobal

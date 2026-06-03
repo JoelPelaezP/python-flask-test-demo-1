@@ -1,0 +1,8 @@
+/Users/joelpelaez/biz.projects.code/python.flask.test/document_api/DocumentGenerator/obj/Debug/net9.0/DocumentGenerator.csproj.AssemblyReference.cache
+/Users/joelpelaez/biz.projects.code/python.flask.test/document_api/DocumentGenerator/obj/Debug/net9.0/DocumentGenerator.GeneratedMSBuildEditorConfig.editorconfig
+/Users/joelpelaez/biz.projects.code/python.flask.test/document_api/DocumentGenerator/obj/Debug/net9.0/DocumentGenerator.AssemblyInfoInputs.cache
+/Users/joelpelaez/biz.projects.code/python.flask.test/document_api/DocumentGenerator/obj/Debug/net9.0/DocumentGenerator.AssemblyInfo.cs
+/Users/joelpelaez/biz.projects.code/python.flask.test/document_api/DocumentGenerator/obj/Debug/net9.0/DocumentGenerator.csproj.CoreCompileInputs.cache
+/Users/joelpelaez/biz.projects.code/python.flask.test/document_api/DocumentGenerator/obj/Debug/net9.0/DocumentGenerator.MvcApplicationPartsAssemblyInfo.cs
+/Users/joelpelaez/biz.projects.code/python.flask.test/document_api/DocumentGenerator/obj/Debug/net9.0/DocumentGenerator.MvcApplicationPartsAssemblyInfo.cache
+/Users/joelpelaez/biz.projects.code/python.flask.test/document_api/DocumentGenerator/obj/Debug/net9.0/DocumentGenerator.sourcelink.json
