@@ -5,8 +5,10 @@ from sqlalchemy.exc import SQLAlchemyError
 import app
 import utility.logger
 from database.models import StoreModel
-from external_services.weather.factory import create_client
+import external_services.weather.factory as weather_client
+import external_services.doc_generator.factory as doc_generator_client
 from schemas.schemas import PlainStoreSchema, StoreSchema
+from external_services.doc_generator.models import CreateSurveyRequest
 
 logger = utility.logger.get_logger(__name__)
 blp = Blueprint("Stores", "stores", description="Operations on stores")
@@ -69,12 +71,15 @@ class Store(MethodView):
 class StoreList(MethodView):
     @blp.response(200, StoreSchema(many=True))
     def get(cls):
-        client = create_client()
+        w_client = weather_client.create_client()
+        w_response = w_client.get_data()
+        logger.info(f"Weather API Response: {w_response}")
 
-        response = client.get_data()
-
-        logger.info("Weather API Response")
-
+        d_client = doc_generator_client.create_client()
+        req = CreateSurveyRequest(name="Joe", lastName= "Test")
+        d_response = d_client.create_survey(req)
+        logger.info(f"Document Generator API Response: {d_response}")
+        
         with app.db_session() as db_session:
             return db_session.query(StoreModel).all()
 
