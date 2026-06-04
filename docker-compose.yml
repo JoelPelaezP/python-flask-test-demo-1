@@ -9,8 +9,13 @@ services:
       - .:/app
     depends_on:
       - python-flask-db
+      - dotnet-document-generator
     env_file:
       - ./.env
+    networks:
+      main:
+        aliases:
+          - python-flask-api
   python-flask-db:
     image: postgres:15
     container_name: python-flask-db
@@ -22,5 +27,27 @@ services:
       - POSTGRES_DB=flask_test_dev
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      main:
+        aliases:
+          - python-flask-db
+  dotnet-document-generator:
+    build:
+      context: document_api/
+    image: dotnet-document-generator:dev
+    container_name: dotnet-document-generator
+    ports: 
+      - '8080:8080'
+    env_file:
+      - document_api/.env
+    platform: linux/amd64
+    networks:
+      main:
+        aliases:
+          - dotnet-document-generator
+
+networks:
+  main:
+  
 volumes:
   postgres_data:
