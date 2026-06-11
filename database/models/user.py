@@ -8,6 +8,7 @@ from database.models.base import Base
 class UserModel(Base):
     __tablename__ = "user"
     id = Column(Integer, primary_key=True)
+    name = Column(Text, nullable=True)
     email = Column(Text, unique=True, nullable=False)
     password = Column(Text, unique=True, nullable=False)
     enabled = Column(Boolean, nullable=True, default=False)
