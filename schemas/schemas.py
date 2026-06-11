@@ -31,3 +31,9 @@ class UserSchema(Schema):
     email = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True)
     enabled = fields.Bool(required=True, dump_only=True)
+
+
+class RevenueSchema(Schema):
+    id = fields.Int(dump_only=True)
+    month = fields.Str(required=True)
+    revenue = fields.Int(required=True)

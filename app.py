@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 import database.config.db as db
 from blocklist import BLOCKLIST
 from resources.item import blp as ItemBlueprint
+from resources.revenue import blp as RevenueBluePrint
 from resources.store import blp as StoreBlueprint
 from resources.user import blp as UserBlueprint
 
@@ -119,6 +120,7 @@ def create_app(
     api.register_blueprint(ItemBlueprint)
     api.register_blueprint(StoreBlueprint)
     api.register_blueprint(UserBlueprint)
+    api.register_blueprint(RevenueBluePrint)
 
     return app
 
