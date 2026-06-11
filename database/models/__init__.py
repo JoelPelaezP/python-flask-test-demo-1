@@ -5,3 +5,4 @@ from database.models.tag import TagModel
 from database.models.user import UserModel
 from database.models.customer import CustomerModel
 from database.models.invoice import InvoiceModel
+from database.models.revenue import RevenueModel

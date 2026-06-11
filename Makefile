@@ -53,3 +53,6 @@ test:
 
 task-check-weather:
 	$(DOCKER_RUN_CMD) python tasks/__init__.py
+
+task-seed-data:
+	$(DOCKER_RUN_CMD) python tasks/seed_data.py
