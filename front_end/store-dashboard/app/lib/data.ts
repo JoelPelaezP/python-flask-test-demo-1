@@ -25,6 +25,145 @@ const revenue = [
   { month: 'Nov', revenue: 3000 },
   { month: 'Dec', revenue: 4800 },
 ];
+
+const customers = [
+  {
+    id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
+    name: 'Evil Rabbit',
+    email: 'evil@rabbit.com',
+    image_url: '/customers/evil-rabbit.png',
+  },
+  {
+    id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
+    name: 'Delba de Oliveira',
+    email: 'delba@oliveira.com',
+    image_url: '/customers/delba-de-oliveira.png',
+  },
+  {
+    id: '3958dc9e-742f-4377-85e9-fec4b6a6442a',
+    name: 'Lee Robinson',
+    email: 'lee@robinson.com',
+    image_url: '/customers/lee-robinson.png',
+  },
+  {
+    id: '76d65c26-f784-44a2-ac19-586678f7c2f2',
+    name: 'Michael Novotny',
+    email: 'michael@novotny.com',
+    image_url: '/customers/michael-novotny.png',
+  },
+  {
+    id: 'CC27C14A-0ACF-4F4A-A6C9-D45682C144B9',
+    name: 'Amy Burns',
+    email: 'amy@burns.com',
+    image_url: '/customers/amy-burns.png',
+  },
+  {
+    id: '13D07535-C59E-4157-A011-F8D2EF4E0CBB',
+    name: 'Balazs Orban',
+    email: 'balazs@orban.com',
+    image_url: '/customers/balazs-orban.png',
+  },
+];
+
+const latestInvoice = [
+  {
+    id: '1',
+    amount: '15795',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '2',
+    amount: '20348',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '3',
+    amount: '3040',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '4',
+    amount: '44800',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '5',
+    amount: '34577',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '6',
+    amount: '54246',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '7',
+    amount: '666',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '8',
+    amount: '32545',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '9',
+    amount: '1250',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '10',
+    amount: '8546',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '11',
+    amount: '500',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '12',
+    amount: '8945',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+  {
+    id: '13',
+    amount: '1000',
+    image_url: '/customers/evil-rabbit.png',
+    email: 'evil@rabbit.com',
+    name: 'Evil Rabbit',
+  },
+];
+
+const numberOfInvoices = 3;
+const numberOfCustomers = 5;
+const totalPaidInvoices = 7;
+const totalPendingInvoices = 10;
+
 /* End - JPP Testing */
 export async function fetchRevenue() {
   try {
@@ -50,18 +189,19 @@ export async function fetchRevenue() {
 
 export async function fetchLatestInvoices() {
   try {
-    const data = await sql<LatestInvoiceRaw[]>`
-      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
-      ORDER BY invoices.date DESC
-      LIMIT 5`;
+    // const data = await sql<LatestInvoiceRaw[]>`
+    //   SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
+    //   FROM invoices
+    //   JOIN customers ON invoices.customer_id = customers.id
+    //   ORDER BY invoices.date DESC
+    //   LIMIT 5`;
 
-    const latestInvoices = data.map((invoice) => ({
-      ...invoice,
-      amount: formatCurrency(invoice.amount),
-    }));
-    return latestInvoices;
+    // const latestInvoices = data.map((invoice) => ({
+    //   ...invoice,
+    //   amount: formatCurrency(invoice.amount),
+    // }));
+    const data = latestInvoice;
+    return data;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch the latest invoices.');
@@ -73,23 +213,23 @@ export async function fetchCardData() {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
-    const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
-    const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
-    const invoiceStatusPromise = sql`SELECT
-         SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-         FROM invoices`;
+    // const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
+    // const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
+    // const invoiceStatusPromise = sql`SELECT
+    //      SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
+    //      SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
+    //      FROM invoices`;
 
-    const data = await Promise.all([
-      invoiceCountPromise,
-      customerCountPromise,
-      invoiceStatusPromise,
-    ]);
+    // const data = await Promise.all([
+    //   invoiceCountPromise,
+    //   customerCountPromise,
+    //   invoiceStatusPromise,
+    // ]);
 
-    const numberOfInvoices = Number(data[0][0].count ?? '0');
-    const numberOfCustomers = Number(data[1][0].count ?? '0');
-    const totalPaidInvoices = formatCurrency(data[2][0].paid ?? '0');
-    const totalPendingInvoices = formatCurrency(data[2][0].pending ?? '0');
+    // const numberOfInvoices = Number(data[0][0].count ?? '0');
+    // const numberOfCustomers = Number(data[1][0].count ?? '0');
+    // const totalPaidInvoices = formatCurrency(data[2][0].paid ?? '0');
+    // const totalPendingInvoices = formatCurrency(data[2][0].pending ?? '0');
 
     return {
       numberOfCustomers,
